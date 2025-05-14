@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "PerformanceMonitor (Package)": {
+      "commandName": "MsixPackage",
+      "doNotLaunchApp": true
+    },
+    "PerformanceMonitor (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
