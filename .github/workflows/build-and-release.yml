@@ -1,0 +1,42 @@
+name: Build and Draft Windows Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build .NET Windows Project
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'  # Adjust if using a preview version
+
+      - name: Restore Dependencies
+        run: dotnet restore
+
+      - name: Build Project
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Create Release Tag
+        id: tag
+        run: |
+          $tag = "v$(Get-Date -Format 'yyyyMMddHHmmss')"
+          echo "tag_name=$tag" >> $env:GITHUB_OUTPUT
+
+      - name: Create GitHub Release Draft
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ steps.tag.outputs.tag_name }}
+          release_name: "Release ${{ steps.tag.outputs.tag_name }}"
+          draft: true
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
