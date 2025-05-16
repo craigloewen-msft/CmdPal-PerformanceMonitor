@@ -25,11 +25,10 @@ jobs:
       - name: Build Project
         run: dotnet build --no-restore --configuration Release
 
-      - name: Create Release Tag
-        id: tag
+      - name: List Output Directory
         run: |
-          $tag = "v$(Get-Date -Format 'yyyyMMddHHmmss')"
-          echo "tag_name=$tag" >> $env:GITHUB_OUTPUT
+          echo "Build output structure:"
+          dir . /s
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
