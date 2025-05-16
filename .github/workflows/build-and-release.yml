@@ -7,11 +7,8 @@ on:
 
 jobs:
   build:
-    name: Build .NET Windows Project (${{ matrix.arch }})
+    name: Build .NET Windows Project
     runs-on: windows-latest
-    strategy:
-      matrix:
-        arch: [win-x64, win-arm64]
 
     steps:
       - name: Checkout Code
@@ -20,19 +17,23 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '9.0.x'
+          dotnet-version: '9.0.x'  # Adjust if using a preview version
 
       - name: Restore Dependencies
-        run: dotnet restore PerformanceMonitor/PerformanceMonitor.csproj
+        run: dotnet restore
 
-      - name: Build Project for ${{ matrix.arch }}
-        run: dotnet build PerformanceMonitor/PerformanceMonitor.csproj --no-restore --configuration Release -r ${{ matrix.arch }}
+      - name: Build Project
+        run: dotnet build --no-restore --configuration Release
 
-      - name: Upload Build Artifacts (${{ matrix.arch }})
+      - name: Publish Project
+        run: dotnet publish --no-restore --configuration Release --output ./publish
+
+      - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts-${{ matrix.arch }}
+          name: build-artifacts
           path: |
-            **/bin/Release/${{ matrix.arch }}/*.dll
-            **/bin/Release/${{ matrix.arch }}/*.exe
-            **/bin/Release/${{ matrix.arch }}/*.pdb
+            **/bin/Release/*/*.dll
+            **/bin/Release/*/*.exe
+            **/bin/Release/*/*.pdb
+            ./publish/**
