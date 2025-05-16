@@ -23,10 +23,10 @@ jobs:
           dotnet-version: '9.0.x'
 
       - name: Restore Dependencies
-        run: dotnet restore
+        run: dotnet restore PerformanceMonitor/PerformanceMonitor.csproj
 
       - name: Build Project for ${{ matrix.arch }}
-        run: dotnet build --no-restore --configuration Release -r ${{ matrix.arch }}
+        run: dotnet build PerformanceMonitor/PerformanceMonitor.csproj --no-restore --configuration Release -r ${{ matrix.arch }}
 
       - name: Upload Build Artifacts (${{ matrix.arch }})
         uses: actions/upload-artifact@v4
